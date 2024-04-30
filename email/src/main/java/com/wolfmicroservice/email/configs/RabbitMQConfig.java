@@ -1,14 +1,15 @@
 package com.wolfmicroservice.email.configs;
 
-import com.rabbitmq.client.AMQP;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 
 @Configuration
-public class RabbiMQConfig {
+public class RabbitMQConfig {
 
     @Value("${broker.queue.email.name}")
     private String queue;
@@ -17,6 +18,11 @@ public class RabbiMQConfig {
     public Queue queue() {
         // nova instancia do tipo Queue, passando a configuração e a definição que é uma fila duravel
         return new Queue(queue, true);
+    }
 
+    @Bean
+    public Jackson2JsonMessageConverter messageConverter() {
+        ObjectMapper mapper = new ObjectMapper();
+        return new Jackson2JsonMessageConverter(mapper);
     }
 }
